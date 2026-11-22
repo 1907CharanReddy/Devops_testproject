@@ -1,41 +1,37 @@
 name: Demo CI Pipeline
 
 on:
- push:
+  push:
 
 jobs:
   pipeline-demo:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build Stage
         run: |
-          echo "=================================="
           echo "BUILD STAGE STARTED"
-          echo "Repository: ${{ github.repository }}"
-          echo "Triggered By: ${{ github.actor }}"
-          echo "=================================="
+          sleep 5
+          echo "BUILD STAGE COMPLETED"
 
       - name: Test Stage
         run: |
-          echo "Executing Unit Tests..."
-          sleep 10
-          echo "All Tests Passed"
+          echo "TEST STAGE STARTED"
+          sleep 5
+          echo "ALL TESTS PASSED"
 
       - name: Security Scan Stage
         run: |
-          echo "Running Security Scan..."
-          sleep 10
-          echo "No Critical Vulnerabilities Found"
+          echo "SECURITY SCAN STARTED"
+          sleep 5
+          echo "NO VULNERABILITIES FOUND"
 
       - name: Artifact Creation Stage
         run: |
-          mkdir artifacts
+          mkdir -p artifacts
           echo "Demo Artifact File" > artifacts/build.txt
           ls -lrt artifacts
 
@@ -43,15 +39,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: demo-artifact
-          path: artifacts/*
+          path: artifacts/build.txt
 
       - name: Deployment Stage
         run: |
-          echo "Deploying Application..."
-          sleep 10
-          echo "Deployment Successful"
-
-            Commit ID   : ${{ github.sha }}
-
-            Run URL:
-            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          echo "DEPLOYMENT STARTED"
+          sleep 5
+          echo "DEPLOYMENT SUCCESSFUL"
