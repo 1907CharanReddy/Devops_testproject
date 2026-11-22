@@ -1,0 +1,91 @@
+name: Demo CI Pipeline
+
+on:
+ push:
+
+jobs:
+  pipeline-demo:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Stage
+        run: |
+          echo "=================================="
+          echo "BUILD STAGE STARTED"
+          echo "Repository: ${{ github.repository }}"
+          echo "Triggered By: ${{ github.actor }}"
+          echo "=================================="
+
+      - name: Test Stage
+        run: |
+          echo "Executing Unit Tests..."
+          sleep 10
+          echo "All Tests Passed"
+
+      - name: Security Scan Stage
+        run: |
+          echo "Running Security Scan..."
+          sleep 10
+          echo "No Critical Vulnerabilities Found"
+
+      - name: Artifact Creation Stage
+        run: |
+          mkdir artifacts
+          echo "Demo Artifact File" > artifacts/build.txt
+          ls -lrt artifacts
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-artifact
+          path: artifacts/*
+
+      - name: Deployment Stage
+        run: |
+          echo "Deploying Application..."
+          sleep 10
+          echo "Deployment Successful"
+
+      - name: Email Notification
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+
+          subject: >
+            GitHub Actions Job Status -
+            ${{ job.status }}
+
+          to: saicharanreddy2007@gmail.com
+          cc: saicharanreddy2007@gmail.com
+          from: saicharanreddy2007@gmail.com
+
+          body: |
+            GitHub Actions Pipeline Execution Details
+
+            Status      : ${{ job.status }}
+
+            Repository  : ${{ github.repository }}
+
+            Workflow    : ${{ github.workflow }}
+
+            Branch      : ${{ github.ref_name }}
+
+            Triggered By: ${{ github.actor }}
+
+            Event Type  : ${{ github.event_name }}
+
+            Run Number  : ${{ github.run_number }}
+
+            Commit ID   : ${{ github.sha }}
+
+            Run URL:
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
